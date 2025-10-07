@@ -1,0 +1,29 @@
+<script>
+// 获取URL参数
+const params = new URLSearchParams(window.location.search);
+const category = params.get('c') || 'j';
+
+// 从一言API获取数据
+fetch(`https://v1.hitokoto.cn/?c=${category}&encode=json`)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('网络请求失败');
+        }
+        return response.json();
+    })
+    .then(data => {
+        // 组合文本格式：句子 —— 出处（作者）
+        let text = data.hitokoto + ' —— ' + data.from;
+        if (data.from_who && data.from_who.trim() !== '') {
+            text += '（' + data.from_who + '）';
+        }
+        
+        // 直接输出纯文本内容
+        document.write(text);
+        document.close();
+    })
+    .catch(error => {
+        document.write('获取一言失败，请刷新重试');
+        document.close();
+    });
+</script>
