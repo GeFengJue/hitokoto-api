@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script>
+        // 获取URL参数
+        const params = new URLSearchParams(window.location.search);
+        const category = params.get('c') || 'j';
+        
+        // 设置响应头为纯文本
+        fetch(`https://v1.hitokoto.cn/?c=${category}&encode=json`)
+            .then(response => response.json())
+            .then(data => {
+                const text = data.from_who 
+                    ? `${data.hitokoto} —— ${data.from}（${data.from_who}）`
+                    : `${data.hitokoto} —— ${data.from}`;
+                
+                // 替换整个文档为纯文本
+                document.open('text/plain');
+                document.write(text);
+                document.close();
+            })
+            .catch(error => {
+                document.open('text/plain');
+                document.write('获取一言失败');
+                document.close();
+            });
+    </script>
+</head>
+<body>
+</body>
+</html>
